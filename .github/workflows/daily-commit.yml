@@ -1,0 +1,29 @@
+name: Daily Auto Commit
+
+on:
+  schedule:
+    # This runs at 00:00 UTC every day
+    - cron: '0 0 * * *'
+  # Allows you to run it manually from the Actions tab for testing
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update Date File
+        run: |
+          # Appends the current date to a log file to create a change
+          echo "$(date)" >> last_run.txt
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+          git add last_run.txt
+          git commit -m "Auto-commit: Daily activity check"
+          git push
